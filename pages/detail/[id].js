@@ -8,10 +8,17 @@ import Head from 'next/head';
 
 
 const Post = ({ item, name }) => {
+  const router = useRouter();
+
+
   return (
     <>
       {
-        item ? (
+        router.isFallback ? (
+          <div style={{ padding: "300px 0" }}>
+            <Loader inline="centered" active content='Loading' />
+          </div>
+        ) : (
           <>
             <Head>
               <title>{item.name}</title>
@@ -19,10 +26,6 @@ const Post = ({ item, name }) => {
             </Head>
             {name} 환경입니다.
             <Item item={item} />
-          </>
-        ) : (
-          <>
-            Empty
           </>
         )
       }
@@ -76,11 +79,21 @@ const Post = ({ item, name }) => {
 export default Post
 
 export async function getStaticPaths() {
+  const url = process.env.API_URL;//`http://makeup-api.herokuapp.com/api/v1/products/${id}.json`;
+  const res = await axios.get(url);
+  const data = res.data;
+
   return {
-    paths: [
-      { params: { id: "740" } },
-      { params: { id: "730" } }, // See the "paths" section below
-    ],
+    // paths: [
+    //   { params: { id: "740" } },
+    //   { params: { id: "730" } }, // See the "paths" section below
+    // ],
+
+    paths: data.slice(0, 9).map((item) => ({
+      params: {
+        id: item.id.toString(),
+      }
+    })),
     fallback: true, // See the "fallback" section below
   };
 }
