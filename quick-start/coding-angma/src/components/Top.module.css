@@ -1,0 +1,12 @@
+.titlebar {
+  display: flex;
+  padding-top: 20;
+}
+
+.titlebar .titlelogo {
+  flex: 100px 0 0;
+}
+
+.logo {
+  display: block;
+}
